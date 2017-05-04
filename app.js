@@ -1,5 +1,5 @@
 console.log("app is starting")
-const fs = require("fs");//require the fs module
+const fs = require("fs");
 const os = require("os");
 const yargs = require("yargs");
 const notes = require("./notes");
@@ -9,13 +9,39 @@ const argv = yargs.argv
 
 var command = process.argv[2];
 if (command == 'add') {
-	notes.addNote(argv.title,argv.body);
+	var note = notes.addNote(argv.title,argv.body);
+	if (note == undefined){
+		console.log("Note title taken");
+	}else {
+		console.log("added note!");
+		console.log("---");
+		console.log(`Title: ${note.title}`);
+		console.log(`Body: ${note.body}`);
+	};
 } else if (command =='list'){
-	notes.getAll();
+	var allNotes = notes.getAll();
+	console.log(`Printing ${allNotes.length} note(s).`);
+	allNotes.forEach(() => {
+		notes.logNote(note);
+
+	});
 } else if (command == 'remove'){
-	notes.remove(argv.title);
+	var noteRemoved = notes.remove(argv.title);
+	var message = noteRemoved ? "The note was removed" : "Note not found";
+	console.log(message);
 } else if (command == 'read'){
-	notes.read(argv.title);
+	var note = notes.getNote(argv.title);
+	if (note){
+		console.log("Note found");
+		console.log("---");
+		console.log(`Title: ${note.title}`);
+		console.log(`Body: ${note.body}`);
+
+	}else{
+		console.log("Note not found");
+		
+	};
+	
 }
 
 else {
